@@ -1,0 +1,24 @@
+{
+  "name": "@reach-sh/reach",
+  "type": "module",
+  "dependencies": {
+    "@reach-sh/stdlib": "^0.1.4",
+    "algosdk": "^1.12.0",
+    "browserify": "^17.0.0",
+    "browserify-fs": "^1.0.0",
+    "cross-fetch": "^3.1.4",
+    "node-fetch": "^2.6.6",
+    "python-shell": "^3.0.0",
+    "require": "^0.4.4"
+  },
+  "author": "reach.sh",
+  "license": "Apache-2.0",
+  "scripts": {
+    "lint": "eslint --ignore-path .gitignore --ext .mjs .",
+    "index": "node --experimental-modules --unhandled-rejections=strict index.mjs"
+  },
+  "version": "1.0.0",
+  "main": "const test = [\"a\",\"b\"];.js",
+  "keywords": [],
+  "description": ""
+}

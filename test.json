@@ -1,0 +1,13 @@
+{ "'name'": "Scientific paper evaluation process",
+    "constraints": [
+                   {"template": "init", "parameters": [["Login"]]},
+                   {"template": "end", "parameters": [["Logout"]]},
+                   {"template": "participation", "parameters": [["Buy"]]},
+                   {"template": "atMostOne", "parameters": [["Login"]]},
+                   {"template": "respondedExistence", "parameters": [["Login"],["Buy"]]},
+                   {"template": "response", "parameters": [["Login"],["Logout"]]},
+                   {"template": "chainResponse", "parameters": [["Login"],["AddToCard"]]}
+            
+                   
+  ] }
+  
