@@ -58,6 +58,15 @@ const statusConstraints = {
 // contraints is a dictionary that will contaions all the contraints associated with its operations like: 'init§Login': 0, 'respondedExistence§Login§Buy': 0,
 let constraints = {};
 
+// 4 constants for constraints state in the enum.
+const tv = 'tv';
+const ts = 'ts';
+const pv = 'pv';
+const ps = 'ps';
+
+//separetor
+const separator =  '§';
+
 
 eachRecursive(file);
 
@@ -87,9 +96,8 @@ function eachRecursive(obj) {
         }
 
         for (var j in obj[k]["parameters"]) {
-          stringConstrain += "§";
-          Operations[obj[k]["parameters"][j][0]] = statusOperations.ENABLED; //CREA Operations
-
+          stringConstrain += separator;
+          Operations[obj[k]["parameters"][j][0]] = statusOperations.ENABLED; 
           stringConstrain += obj[k]["parameters"][j][0];
           stringCheck += "'";
           stringCheck += obj[k]["parameters"][j][0];
@@ -142,9 +150,9 @@ function eachRecursive(obj) {
 
 
   let initEnum = {
-    0: 'tv',
-    1: 'ps',
-    2: 'pv',
+    0: tv,
+    1: ps,
+    2: pv,
   }
 
   //start with 0 = tv, go to 1 = ps if it occurs and go to 2 = pv when called with something other than init
@@ -152,17 +160,17 @@ function eachRecursive(obj) {
   function init(value, called) {
 
     if (value == called) {
-      constraints["init".concat("§").concat(value)] = 1;
+      constraints["init".concat(separator).concat(value)] = 1;
     }
-    else if (value != called && constraints["init".concat("§").concat(value)] != 1) {
-      constraints["init".concat("§").concat(value)] = 2;
+    else if (value != called && constraints["init".concat(separator).concat(value)] != 1) {
+      constraints["init".concat(separator).concat(value)] = 2;
     }
   }
 
   let endEnum = {
-    0: 'tv',
-    1: 'tv',
-    2: 'ps',
+    0: tv,
+    1: tv,
+    2: ps,
   }
 
 
@@ -172,25 +180,25 @@ function eachRecursive(obj) {
     console.log(value);
     if (value == called) {
 
-      constraints["end".concat("§").concat(value)] = 1;
+      constraints["end".concat(separator).concat(value)] = 1;
       Operations[called] = statusOperations.PENDING;
     }
-    else if (constraints["end".concat("§").concat(value)] == 1 && called == "TERMINATE") {
+    else if (constraints["end".concat(separator).concat(value)] == 1 && called == "TERMINATE") {
 
-      constraints["end".concat("§").concat(value)] = 2;
+      constraints["end".concat(separator).concat(value)] = 2;
       Operations[value] = statusOperations.ENABLED;
 
     }
-    else if (constraints["end".concat("§").concat(value)] == 1 && called != "TERMINATE") {
-      constraints["end".concat("§").concat(value)] = 0;
+    else if (constraints["end".concat(separator).concat(value)] == 1 && called != "TERMINATE") {
+      constraints["end".concat(separator).concat(value)] = 0;
     }
 
   }
 
 
   let participationEnum = {
-    0: 'tv',
-    1: 'ps',
+    0: tv,
+    1: ps,
 
   }
   //starts at 0 = tv and goes to 1 = ps if called
@@ -198,91 +206,91 @@ function eachRecursive(obj) {
   function participation(value, called) {
 
     if (value == called) {
-      constraints["participation".concat("§").concat(value)] = 1;
+      constraints["participation".concat(separator).concat(value)] = 1;
       Operations[called] = statusOperations.ENABLED;
     }
 
   }
 
   let atMostOneEnum = {
-    0: 'tv',
-    1: 'ts',
-    2: 'pv',
+    0: tv,
+    1: ts,
+    2: pv,
   }
 
   //starts at 0 = tv goes to 1 = ts, goes to 2 = pv if called
   function atMostOne(value, called) {
     if (value == called) {
-      constraints["atMostOne".concat("§").concat(value)] = 1;
+      constraints["atMostOne".concat(separator).concat(value)] = 1;
       Operations[called] = statusOperations.LOCKED;
     }
-    else if (value == called && constraints["atMostOne".concat("§").concat(value)] == 1) {
-      constraints["atMostOne".concat("§").concat(value)] = 2;
+    else if (value == called && constraints["atMostOne".concat(separator).concat(value)] == 1) {
+      constraints["atMostOne".concat(separator).concat(value)] = 2;
     }
 
 
   }
 
   let respondedExistenceEnum = {
-    0: 'ts',
-    1: 'ps',
-    2: 'tv',
+    0: ts,
+    1: ps,
+    2: tv,
   }
   // starts at 0 = ts goes to 1 = ps if value enters, otherwise if value 2 enters it goes to 2 = tv and if value enters after then it sets back to 1
   function respondedExistence(value, value2, called) {
 
-    if (value2 == called && constraints["respondedExistence".concat("§").concat(value).concat(value2)] == 0) {
+    if (value2 == called && constraints["respondedExistence".concat(separator).concat(value).concat(value2)] == 0) {
 
-      constraints["respondedExistence".concat("§").concat(value).concat("§").concat(value2)] = 1;
+      constraints["respondedExistence".concat(separator).concat(value).concat(separator).concat(value2)] = 1;
     }
-    else if (value == called && constraints["respondedExistence".concat("§").concat(value).concat("§").concat(value2)] == 0) {
-      constraints["respondedExistence".concat("§").concat(value).concat("§").concat(value2)] = 2;
+    else if (value == called && constraints["respondedExistence".concat(separator).concat(value).concat(separator).concat(value2)] == 0) {
+      constraints["respondedExistence".concat(separator).concat(value).concat(separator).concat(value2)] = 2;
       Operations[value2] = statusOperations.PENDING;
     }
-    else if (value2 == called && constraints["respondedExistence".concat("§").concat(value).concat("§").concat(value2)] == 2) {
-      constraints["respondedExistence".concat("§").concat(value).concat("§").concat(value2)] = 1;
+    else if (value2 == called && constraints["respondedExistence".concat(separator).concat(value).concat(separator).concat(value2)] == 2) {
+      constraints["respondedExistence".concat(separator).concat(value).concat(separator).concat(value2)] = 1;
     }
 
   }
 
 
   let chainResponseEnum = {
-    0: 'ts',
-    1: 'pv',
-    2: 'tv',
+    0: ts,
+    1: pv,
+    2: tv,
   }
 
   //starts from 0 = ts goes to 2 = tv if value enters, from here it returns to 0 if value2 enters otherwise goes to 1: pv
   function chainResponse(value, value2, called) {
-    if (value == called && constraints["chainResponse".concat("§").concat(value).concat("§").concat(value2)] == 0) {
-      constraints["chainResponse".concat("§").concat(value).concat("§").concat(value2)] = 2
+    if (value == called && constraints["chainResponse".concat(separator).concat(value).concat(separator).concat(value2)] == 0) {
+      constraints["chainResponse".concat(separator).concat(value).concat(separator).concat(value2)] = 2
       Operations[value2] = statusOperations.URGENT;
     }
-    else if (value2 == called && constraints["chainResponse".concat("§").concat(value).concat("§").concat(value2)] == 2) {
+    else if (value2 == called && constraints["chainResponse".concat(separator).concat(value).concat(separator).concat(value2)] == 2) {
 
-      constraints["chainResponse".concat("§").concat(value).concat("§").concat(value2)] = 0
+      constraints["chainResponse".concat(separator).concat(value).concat(separator).concat(value2)] = 0
       Operations[value2] = statusOperations.ENABLED;
     }
-    else if (value2 != called && constraints["chainResponse".concat("§").concat(value).concat("§").concat(value2)] == 2) {
-      constraints["chainResponse".concat("§").concat(value).concat("§").concat(value2)] = 1
+    else if (value2 != called && constraints["chainResponse".concat(separator).concat(value).concat(separator).concat(value2)] == 2) {
+      constraints["chainResponse".concat(separator).concat(value).concat(separator).concat(value2)] = 1
     }
 
   }
 
 
   let responseTEnum = {
-    0: 'ts',
-    1: 'tv',
+    0: ts,
+    1: tv,
 
   }
 
   //starts at 0 = ts goes to 1 = ts if value enters
   function responseT(value, value2, called) {
-    if (value == called && constraints["responseT".concat("§").concat(value).concat("§").concat(value2)] == 0) {
-      constraints["responseT".concat("§").concat(value).concat("§").concat(value2)] = 1;
+    if (value == called && constraints["responseT".concat(separator).concat(value).concat(separator).concat(value2)] == 0) {
+      constraints["responseT".concat(separator).concat(value).concat(separator).concat(value2)] = 1;
     }
-    else if (value2 == called && constraints["responseT".concat("§").concat(value).concat("§").concat(value2)] == 1) {
-      constraints["responseT".concat("§").concat(value).concat("§").concat(value2)] = 0;
+    else if (value2 == called && constraints["responseT".concat(separator).concat(value).concat(separator).concat(value2)] == 1) {
+      constraints["responseT".concat(separator).concat(value).concat(separator).concat(value2)] = 0;
     }
 
   }
@@ -316,7 +324,7 @@ function eachRecursive(obj) {
   //look for the presence of errors reported in the dictionary with the value pv
   function findError() {
     for (var prop in constraints) {
-      const app = prop.substring(0, prop.indexOf("§"));
+      const app = prop.substring(0, prop.indexOf(separator));
       if (eval(app.concat("Enum"))[constraints[prop]] == 'pv') {
         return false;
       }
@@ -327,7 +335,7 @@ function eachRecursive(obj) {
   //looks for errors when the terminate action is sent
   function findErrorTerminate() {
     for (var prop in constraints) {
-      const app = prop.substring(0, prop.indexOf("§"));
+      const app = prop.substring(0, prop.indexOf(separator));
       if (eval(app.concat("Enum"))[constraints[prop]] == 'pv' || eval(app.concat("Enum"))[constraints[prop]] == 'tv') {
         return false;
       }
