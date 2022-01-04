@@ -1,5 +1,6 @@
 # Declare_to_Teal_in_Reach
 Declarative process models using distributed smart-contracts in Reach.
+Automatic generation for Teal and Solidity
 
 
 ## Requirements
@@ -14,7 +15,8 @@ For more informations and check before run: https://docs.reach.sh/tut/rps/#tut-3
 
 ## Foreplay
 
-A simple programs in reach need only two files: index.rhs and index.mjs.The front-end and the back-end respectively
+A simple programs in reach need only two files: index.rhs and index.mjs.The front-end and the back-end respectively.
+
 
 ## index.rhs
 
