@@ -16,20 +16,20 @@ For more informations and check before run: https://docs.reach.sh/tut/rps/#tut-3
 
 ## Foreplay
 
-A simple programs in reach need only two files: index.rhs and index.mjs.The front-end and the back-end respectively.
+A simple program in reach need only two files: index.rhs and index.mjs.The front-end and the back-end respectively.
 
 
 ## index.rhs
 
 This file contains the application's frontend.
-It's very simple, we have only two actor that interface. One is the User and the other is the Agency.
+It's very simple, we have only two actor that interface: One is the User and the other one is the Agency.
 The latter has only the function of representing to whom the cost for the use of the smart-contract service will be paid.
-The user instead is the main Actor. He has a method for making requests to the smart contract.
+The user instead is the main Actor. It has a method in order to make requests to the smart contract.
 
 ## index.mjs
 
 This file contains the application's backend.
-As you can see is written in Javascript and contain the implementation of the Actor's method. 
+As you can see is written in Javascript and contains the implementation of the Actor's method. 
 
 ## test.json
 
@@ -47,8 +47,7 @@ In the terminal run the command:
 
 ## How to test 
 
-If you want to change the test is very simple.
-You have only to add the new file.json in the folder and rename the file in the code here:
+If you want to change the test is very simple: You only have to add the new file.json in the folder and rename the file in the code here.
 
  <pre><code> line 12: const file = JSON.parse(await readFile('./test.json'));
 </code></pre>
