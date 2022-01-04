@@ -7,7 +7,7 @@ const User = {
   
 };
 const Agency = {
-  Serve: Fun([], Array(Bytes(32), 32)),
+ 
 };
 
 /*
@@ -26,15 +26,14 @@ export const main = Reach.App(() => {
 
     //States that this block of code is something that only Alice performs.
     Alice.only(() => {
-      const test = declassify(interact.Main(Bytes(32).pad('Login')));
-      const test2 = declassify(interact.Main(Bytes(32).pad('AddToCard')));
-      const test3 = declassify(interact.Main(Bytes(32).pad('Buy')));
-      const test4 = declassify(interact.Main(Bytes(32).pad('Logout')));
-      const test5 = declassify(interact.Main(Bytes(32).pad('TERMINATE')));
+      const Request1 = declassify(interact.Main(Bytes(32).pad('Login')));
+      const Request2 = declassify(interact.Main(Bytes(32).pad('AddToCard')));
+      const Request3 = declassify(interact.Main(Bytes(32).pad('Buy')));
+      const Request4 = declassify(interact.Main(Bytes(32).pad('Logout')));
+      const Request5 = declassify(interact.Main(Bytes(32).pad('TERMINATE')));
       
     });
-    Alice.publish(test);
+    Alice.publish(Request5);
     commit();
 
   });
-
