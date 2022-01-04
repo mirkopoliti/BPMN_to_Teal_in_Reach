@@ -1,4 +1,4 @@
-# Declare_to_Teal_in_Reach
+# Declare_to_Reach
 Declarative process models using distributed smart-contracts in Reach. 
 
 Automatic generation for Teal and Solidity
