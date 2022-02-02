@@ -1,4 +1,4 @@
-{ "'name'": "Scientific paper evaluation process",
+{ "'name'": "Shop process",
     "constraints": [
                    {"template": "init", "parameters": [["Login"]]},
                    {"template": "end", "parameters": [["Logout"]]},
@@ -6,8 +6,9 @@
                    {"template": "atMostOne", "parameters": [["Login"]]},
                    {"template": "respondedExistence", "parameters": [["Login"],["Buy"]]},
                    {"template": "response", "parameters": [["Login"],["Logout"]]},
-                   {"template": "chainResponse", "parameters": [["Login"],["AddToCart"]]}
-            
-                   
+                   {"template": "chainResponse", "parameters": [["Login"],["AddToCard"]]},
+                   {"template": "precedence", "parameters": [["Login"],["AddToCard"]]},
+                   {"template": "chainPrecedence", "parameters": [["Login"],["AddToCard"]]},
+                   {"template": "alternatePrecedence", "parameters": [["Login"],["AddToCard"]]}            
   ] }
   
