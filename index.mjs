@@ -65,7 +65,7 @@ const pv = 'pv';
 const ps = 'ps';
 
 //separetor
-const separator =  '§';
+const separator = '§';
 
 
 eachRecursive(file);
@@ -97,7 +97,7 @@ function eachRecursive(obj) {
 
         for (var j in obj[k]["parameters"]) {
           stringConstrain += separator;
-          Operations[obj[k]["parameters"][j][0]] = statusOperations.ENABLED; 
+          Operations[obj[k]["parameters"][j][0]] = statusOperations.ENABLED;
           stringConstrain += obj[k]["parameters"][j][0];
           stringCheck += "'";
           stringCheck += obj[k]["parameters"][j][0];
@@ -123,10 +123,10 @@ function eachRecursive(obj) {
 
 
 /*
- Line 124:  Defines an asynchronous function that will be the body of our frontend.
- Line 126 : Defines a quantity of network tokens as the starting balance for each test account.
- Line 127/128: Create test accounts with initial endowments for Alice and Bob. This will only work on the Reach-provided developer testing network
- Line 129: has Alice deploy the application
+ Line 132:  Defines an asynchronous function that will be the body of our frontend.
+ Line 134 : Defines a quantity of network tokens as the starting balance for each test account.
+ Line 135/136: Create test accounts with initial endowments for Alice and Bob. This will only work on the Reach-provided developer testing network
+ Line 137: has Alice deploy the application
 */
 
 (async () => {
@@ -135,7 +135,7 @@ function eachRecursive(obj) {
   const accAlice = await stdlib.newTestAccount(startingBalance);
   const accBob = await stdlib.newTestAccount(startingBalance);
   const ctcAlice = accAlice.deploy(backend);
-  const ctcBob = accBob.attach(backend, ctcAlice.getInfo());
+
 
 
   //trimNull is a simple function for delete null value from the strings
@@ -295,29 +295,61 @@ function eachRecursive(obj) {
 
   }
 
+  let precedenceEnum = {
+    0: ts,
+    1: ps,
+    2: pv,
+  }
+
+  //starts with 0 = ts goes to 1 = ps if value enters else if value2 enters go in 2:pv. 
   function precedence(value, value2, called) {
-    constraints["precedence".concat(value).concat(value2)] = statusConstraints.PSATISFIED;
-    if (Operations[value2] == statusOperations.CALLEDANDCALLABLE && Operations[value] != statusOperations.CALLEDANDCALLABLE) {
-      console.log("errore devi prima svolgere qualcos'altro");
-      Operations[value] = statusOperations.ERROR;
 
+    if (value == called && constraints["precedence".concat(separator).concat(value).concat(separator).concat(value2)] == 0) {
+      constraints["precedence".concat(separator).concat(value).concat(separator).concat(value2)] = 1;
     }
+
+    else if (value2 == called && constraints["precedence".concat(separator).concat(value).concat(separator).concat(value2)] == 0) {
+      constraints["precedence".concat(separator).concat(value).concat(separator).concat(value2)] = 2;
+    }
+
   }
+
+  let chainPrecedenceEnum = {
+    0: ts,
+    1: ts,
+    2: pv,
+  }
+
+  //starts with 0 = ts goes to 1 = ts if value enters else if value2 enters go in 2:pv. if is in 1 = ts and a value different "value" enters go in 0 = pv
   function chainPrecedence(value, value2, called) {
-    console.log(Operations);
-    console.log(Order);
-    constraints["chainPrecedence".concat(value).concat(value2)] = statusConstraints.PSATISFIED;
-    if (Operations[value2] == statusOperations.CALLEDANDCALLABLE && Order[Order.length - 1] != value) {
-      Operations[value2] = statusOperations.ERROR;
-      console.log("errore in chanPrecedence");
+
+    if (value == called && constraints["chainPrecedence".concat(separator).concat(value).concat(separator).concat(value2)] == 0) {
+      constraints["chainPrecedence".concat(separator).concat(value).concat(separator).concat(value2)] = 1;
+    }
+    else if (value != called && constraints["chainPrecedence".concat(separator).concat(value).concat(separator).concat(value2)] == 1) {
+      constraints["chainPrecedence".concat(separator).concat(value).concat(separator).concat(value2)] = 0;
+    }
+    else if (value2 == called && constraints["chainPrecedence".concat(separator).concat(value).concat(separator).concat(value2)] == 0) {
+      constraints["chainPrecedence".concat(separator).concat(value).concat(separator).concat(value2)] = 2;
     }
   }
 
+  let alternatePrecedenceEnum = {
+    0: ts,
+    1: ts,
+    2: pv,
+  }
+
+  //starts with 0 = ts goes to 1 = ts if value enters else if value2 enters go in 2:pv. if is in 1 = ts and a value2 enters go in 0 = pv
   function alternatePrecedence(value, value2, called) {
-    constraints["alternatePrecedence".concat(value).concat(value2)] = statusConstraints.PSATISFIED;
-    if (Operations[value2] == statusOperations.CALLEDANDCALLABLE && Order.indexOf(value) == -1 || Order[Order.length - 1] == value2) {
-      Operations[value2] = statusOperations.ERROR;
-      console.log("errore in alternatePrecedence");
+    if (value == called && constraints["alternatePrecedence".concat(separator).concat(value).concat(separator).concat(value2)] == 0) {
+      constraints["alternatePrecedence".concat(separator).concat(value).concat(separator).concat(value2)] = 1;
+    }
+    else if (value2 == called && constraints["alternatePrecedence".concat(separator).concat(value).concat(separator).concat(value2)] == 1) {
+      constraints["alternatePrecedence".concat(separator).concat(value).concat(separator).concat(value2)] = 0;
+    }
+    else if (value2 == called && constraints["alternatePrecedence".concat(separator).concat(value).concat(separator).concat(value2)] == 0) {
+      constraints["alternatePrecedence".concat(separator).concat(value).concat(separator).concat(value2)] = 2;
     }
   }
 
