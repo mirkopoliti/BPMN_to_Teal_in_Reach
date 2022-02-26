@@ -125,7 +125,7 @@ function eachRecursive(obj) {
       }
 
       eachRecursive(obj[k]);
-
+      console.log(checkCall);
     }
 
   }
@@ -167,10 +167,10 @@ let initEnum = {
 function init(value, called) {
 
   if (value == called) {
-    constraints["init".concat(separator).concat(value)] = 1;
+    constraints[concatenation(['init',value])] = 1;
   }
-  else if (value != called && constraints["init".concat(separator).concat(value)] != 1) {
-    constraints["init".concat(separator).concat(value)] = 2;
+  else if (value != called && constraints[concatenation(['init',value])] != 1) {
+    constraints[concatenation(['init',value])] = 2;
   }
 }
 
@@ -184,20 +184,19 @@ let endEnum = {
 //starts with 0 = tv and goes to 1 = tv if called, goes to 2 = ps if called immediately after finish, otherwise it returns to 0
 
 function end(value, called) {
-  console.log(value);
   if (value == called) {
 
-    constraints["end".concat(separator).concat(value)] = 1;
+    constraints[concatenation(["end",value])] = 1;
     operations[called] = statusOperations.PENDING;
   }
-  else if (constraints["end".concat(separator).concat(value)] == 1 && called == "TERMINATE") {
+  else if (constraints[concatenation(["end",value])] == 1 && called == "TERMINATE") {
 
-    constraints["end".concat(separator).concat(value)] = 2;
+    constraints[concatenation(["end",value])] = 2;
     operations[value] = statusOperations.ENABLED;
 
   }
-  else if (constraints["end".concat(separator).concat(value)] == 1 && called != "TERMINATE") {
-    constraints["end".concat(separator).concat(value)] = 0;
+  else if (constraints[concatenation(["end",value])] == 1 && called != "TERMINATE") {
+    constraints[concatenation(["end",value])] = 0;
   }
 
 }
@@ -211,9 +210,8 @@ let participationEnum = {
 //starts at 0 = tv and goes to 1 = ps if called
 
 function participation(value, called) {
-
   if (value == called) {
-    constraints["participation".concat(separator).concat(value)] = 1;
+    constraints[concatenation(["participation",value])] = 1;
     operations[called] = statusOperations.ENABLED;
   }
 
@@ -228,11 +226,11 @@ let atMostOneEnum = {
 //starts at 0 = tv goes to 1 = ts, goes to 2 = pv if called
 function atMostOne(value, called) {
   if (value == called) {
-    constraints["atMostOne".concat(separator).concat(value)] = 1;
+    constraints[concatenation(["atMostOne",value])] = 1;
     operations[called] = statusOperations.LOCKED;
   }
-  else if (value == called && constraints["atMostOne".concat(separator).concat(value)] == 1) {
-    constraints["atMostOne".concat(separator).concat(value)] = 2;
+  else if (value == called && constraints[concatenation(["atMostOne",value])] == 1) {
+    constraints[concatenation(["atMostOne",value])] = 2;
   }
 
 
@@ -245,17 +243,16 @@ let respondedExistenceEnum = {
 }
 // starts at 0 = ts goes to 1 = ps if value enters, otherwise if value 2 enters it goes to 2 = tv and if value enters after then it sets back to 1
 function respondedExistence(value, value2, called) {
+  if (value2 == called && constraints[concatenation(["respondedExistence",value, value2])] == 0) {
 
-  if (value2 == called && constraints["respondedExistence".concat(separator).concat(value).concat(value2)] == 0) {
-
-    constraints["respondedExistence".concat(separator).concat(value).concat(separator).concat(value2)] = 1;
+    constraints[concatenation(["respondedExistence",value, value2])] = 1;
   }
-  else if (value == called && constraints["respondedExistence".concat(separator).concat(value).concat(separator).concat(value2)] == 0) {
-    constraints["respondedExistence".concat(separator).concat(value).concat(separator).concat(value2)] = 2;
+  else if (value == called && constraints[concatenation(["respondedExistence",value, value2])] == 0) {
+    constraints[concatenation(["respondedExistence",value, value2])] = 2;
     operations[value2] = statusOperations.PENDING;
   }
-  else if (value2 == called && constraints["respondedExistence".concat(separator).concat(value).concat(separator).concat(value2)] == 2) {
-    constraints["respondedExistence".concat(separator).concat(value).concat(separator).concat(value2)] = 1;
+  else if (value2 == called && constraints[concatenation(["respondedExistence",value, value2])] == 2) {
+    constraints[concatenation(["respondedExistence",value, value2])] = 1;
   }
 
 }
@@ -269,19 +266,18 @@ let chainResponseEnum = {
 
 //starts from 0 = ts goes to 2 = tv if value enters, from here it returns to 0 if value2 enters otherwise goes to 1: pv
 
-
 function chainResponse(value, value2, called) {
-  if (value == called && constraints["chainResponse".concat(separator).concat(value).concat(separator).concat(value2)] == 0) {
-    constraints["chainResponse".concat(separator).concat(value).concat(separator).concat(value2)] = 2
+  if (value == called && constraints[concatenation(["chainResponse",value, value2])] == 0) {
+    constraints[concatenation(["chainResponse",value, value2])] = 2
     operations[value2] = statusOperations.URGENT;
   }
-  else if (value2 == called && constraints["chainResponse".concat(separator).concat(value).concat(separator).concat(value2)] == 2) {
+  else if (value2 == called && constraints[concatenation(["chainResponse",value, value2])] == 2) {
 
-    constraints["chainResponse".concat(separator).concat(value).concat(separator).concat(value2)] = 0
+    constraints[concatenation(["chainResponse",value, value2])] = 0
     operations[value2] = statusOperations.ENABLED;
   }
-  else if (value2 != called && constraints["chainResponse".concat(separator).concat(value).concat(separator).concat(value2)] == 2) {
-    constraints["chainResponse".concat(separator).concat(value).concat(separator).concat(value2)] = 1
+  else if (value2 != called && constraints[concatenation(["chainResponse",value, value2])] == 2) {
+    constraints[concatenation(["chainResponse",value, value2])] = 1
   }
 }
 
@@ -294,11 +290,11 @@ let responseTEnum = {
 
 //starts at 0 = ts goes to 1 = ts if value enters
 function responseT(value, value2, called) {
-  if (value == called && constraints["responseT".concat(separator).concat(value).concat(separator).concat(value2)] == 0) {
-    constraints["responseT".concat(separator).concat(value).concat(separator).concat(value2)] = 1;
+  if (value == called && constraints[concatenation(["responseT",value, value2])] == 0) {
+    constraints[concatenation(["responseT",value, value2])] = 1;
   }
-  else if (value2 == called && constraints["responseT".concat(separator).concat(value).concat(separator).concat(value2)] == 1) {
-    constraints["responseT".concat(separator).concat(value).concat(separator).concat(value2)] = 0;
+  else if (value2 == called && constraints[concatenation(["responseT",value, value2])] == 1) {
+    constraints[concatenation(["responseT",value, value2])] = 0;
   }
 
 }
@@ -312,12 +308,12 @@ let precedenceEnum = {
 //starts with 0 = ts goes to 1 = ps if value enters else if value2 enters go in 2:pv. 
 function precedence(value, value2, called) {
 
-  if (value == called && constraints["precedence".concat(separator).concat(value).concat(separator).concat(value2)] == 0) {
-    constraints["precedence".concat(separator).concat(value).concat(separator).concat(value2)] = 1;
+  if (value == called && constraints[concatenation(["precedence",value, value2])] == 0) {
+    constraints[concatenation(["precedence",value, value2])] = 1;
   }
 
-  else if (value2 == called && constraints["precedence".concat(separator).concat(value).concat(separator).concat(value2)] == 0) {
-    constraints["precedence".concat(separator).concat(value).concat(separator).concat(value2)] = 2;
+  else if (value2 == called && constraints[concatenation(["precedence",value, value2])] == 0) {
+    constraints[concatenation(["precedence",value, value2])] = 2;
   }
 
 }
@@ -332,14 +328,14 @@ let chainPrecedenceEnum = {
 
 function chainPrecedence(value, value2, called) {
 
-  if (value == called && constraints["chainPrecedence".concat(separator).concat(value).concat(separator).concat(value2)] == 0) {
-    constraints["chainPrecedence".concat(separator).concat(value).concat(separator).concat(value2)] = 1;
+  if (value == called && constraints[concatenation(["chainPrecedence",value, value2])] == 0) {
+    constraints[concatenation(["chainPrecedence",value, value2])] = 1;
   }
-  else if (value != called && constraints["chainPrecedence".concat(separator).concat(value).concat(separator).concat(value2)] == 1) {
-    constraints["chainPrecedence".concat(separator).concat(value).concat(separator).concat(value2)] = 0;
+  else if (value != called && constraints[concatenation(["chainPrecedence",value, value2])] == 1) {
+    constraints[concatenation(["chainPrecedence",value, value2])] = 0;
   }
-  else if (value2 == called && constraints["chainPrecedence".concat(separator).concat(value).concat(separator).concat(value2)] == 0) {
-    constraints["chainPrecedence".concat(separator).concat(value).concat(separator).concat(value2)] = 2;
+  else if (value2 == called && constraints[concatenation(["chainPrecedence",value, value2])] == 0) {
+    constraints[concatenation(["chainPrecedence",value, value2])] = 2;
   }
 }
 
@@ -351,14 +347,14 @@ let alternatePrecedenceEnum = {
 
 //starts with 0 = ts goes to 1 = ts if value enters else if value2 enters go in 2:pv. if is in 1 = ts and a value2 enters go in 0 = pv
 function alternatePrecedence(value, value2, called) {
-  if (value == called && constraints["alternatePrecedence".concat(separator).concat(value).concat(separator).concat(value2)] == 0) {
-    constraints["alternatePrecedence".concat(separator).concat(value).concat(separator).concat(value2)] = 1;
+  if (value == called && constraints[concatenation(["alternatePrecedence",value, value2])] == 0) {
+    constraints[concatenation(["alternatePrecedence",value, value2])] = 1;
   }
-  else if (value2 == called && constraints["alternatePrecedence".concat(separator).concat(value).concat(separator).concat(value2)] == 1) {
-    constraints["alternatePrecedence".concat(separator).concat(value).concat(separator).concat(value2)] = 0;
+  else if (value2 == called && constraints[concatenation(["alternatePrecedence",value, value2])] == 1) {
+    constraints[concatenation(["alternatePrecedence",value, value2])] = 0;
   }
-  else if (value2 == called && constraints["alternatePrecedence".concat(separator).concat(value).concat(separator).concat(value2)] == 0) {
-    constraints["alternatePrecedence".concat(separator).concat(value).concat(separator).concat(value2)] = 2;
+  else if (value2 == called && constraints[concatenation(["alternatePrecedence",value, value2])] == 0) {
+    constraints[concatenation(["alternatePrecedence",value, value2])] = 2;
   }
 }
 
@@ -397,6 +393,17 @@ function check(value) {
     eval(checkCall[val]);
   }
 }
+
+function concatenation(values){
+  let stringApp= values[0];
+
+  for (let i = 1; i< values.length; i++){
+    stringApp += separator;
+    stringApp += values[i];
+  }
+  return stringApp;
+}
+
 
 /*
 Main function: First call trim Null.
@@ -469,7 +476,7 @@ await Promise.all([
   ctcBob.p.Bob({
     ...User('Bob'),
     acceptPayment: (amt) => {
-      console.log(`Bob accepts the Payment of ${fmt(amt)}.`);
+      console.log(`Agency accepts the Payment of ${fmt(amt)}.`);
     },
   }),
   
@@ -478,8 +485,8 @@ await Promise.all([
 const afterAlice = await getBalance(accAlice);
 const afterBob = await getBalance(accBob);
 
-console.log(`Alice went from ${beforeAlice} to ${afterAlice}.`);
-console.log(`Bob went from ${beforeBob} to ${afterBob}.`);
+console.log(`User went from ${beforeAlice} to ${afterAlice}.`);
+console.log(`Agency went from ${beforeBob} to ${afterBob}.`);
 
 
 
