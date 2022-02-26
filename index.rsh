@@ -8,9 +8,7 @@ const User = {
   Main: Fun([Bytes(32)], Bool),
   
 };
-const Agency = {
- 
-};
+const Agency = {};
 
 /*
 Use this interface for both participants. 
