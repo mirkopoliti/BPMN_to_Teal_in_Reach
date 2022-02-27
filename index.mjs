@@ -125,7 +125,6 @@ function eachRecursive(obj) {
       }
 
       eachRecursive(obj[k]);
-      console.log(checkCall);
     }
 
   }
@@ -357,6 +356,144 @@ function alternatePrecedence(value, value2, called) {
     constraints[concatenation(["alternatePrecedence",value, value2])] = 2;
   }
 }
+
+let existenceEnum = {
+  0: tv,
+  1: ps,
+}
+//start with 0 = tv, goes to 1 = ps if value enters.
+function existence(value, called){
+  if (value == called && constraints[concatenation(["existence",value])] == 0) {
+    constraints[concatenation(["existence",value])] = 1;
+  }
+  else {
+    operations[called] = statusOperations.PENDING;
+  }
+}
+
+let alternateResponseEnum = {
+  0: ts,
+  1: pv,
+  2: tv,
+}
+
+//starts with 0 = ts goes to 2 = tv if value enters. if is in 2 = tv and a value enters go in 1 = tv else return in 0 = ts
+function alternateResponse(value, value2, called) {
+  if (value == called && constraints[concatenation(["alternateResponse",value, value2])] == 0) {
+    constraints[concatenation(["alternateResponse",value, value2])] = 2;
+    operations[called] = statusOperations.LOCKED;
+  }
+  else if (value == called && constraints[concatenation(["alternateResponse",value, value2])] == 2) {
+    constraints[concatenation(["alternateResponse",value, value2])] = 1;
+  }
+  else if (value2 == called && constraints[concatenation(["alternateResponse",value, value2])] == 2) {
+    constraints[concatenation(["alternateResponse",value, value2])] = 0;
+  }
+}
+
+let notCoexistenceEnum = {
+  0: ts,
+  1: pv,
+  2: ts,
+  3: ts,
+}
+
+//starts with 0 = ts goes to 2 = ts if value2 enters. if is in 2 = ts and a value enters go in 1 = pv. if is in 0 = ts and value enters go in 3 = ts, and if value 2 enters go in 1 = pv
+function notCoexistence(value, value2, called) {
+  if (value == called && constraints[concatenation(["notCoexistence",value, value2])] == 0) {
+    constraints[concatenation(["notCoexistence",value, value2])] = 3;
+    operations[value2] = statusOperations.LOCKED;
+  }
+  else if (value2 == called && constraints[concatenation(["notCoexistence",value, value2])] == 3) {
+    constraints[concatenation(["notCoexistence",value, value2])] = 1;
+  }
+  else if (value2 == called && constraints[concatenation(["notCoexistence",value, value2])] == 0) {
+    constraints[concatenation(["notCoexistence",value, value2])] = 2;
+    operations[called] = statusOperations.LOCKED;
+  }
+  else if (value == called && constraints[concatenation(["notCoexistence",value, value2])] == 2) {
+    constraints[concatenation(["notCoexistence",value, value2])] = 1;
+  }
+}
+
+let notChainSuccessionEnum = {
+  0: ts,
+  1: pv,
+  2: ts,
+}
+
+//starts with 0 = ts goes to 2 = ts if value enters. if is in 2 = ts and a value2 enters go in 1 = pv else if something different value or value2 return in 0=ts
+function notChainSuccession(value, value2, called) {
+  if (value == called && constraints[concatenation(["notChainSuccession",value, value2])] == 0) {
+    constraints[concatenation(["notChainSuccession",value, value2])] = 2;
+    operations[value2] = statusOperations.LOCKED;
+  }
+  else if (value2 == called && constraints[concatenation(["notChainSuccession",value, value2])] == 2) {
+    constraints[concatenation(["notChainSuccession",value, value2])] = 1;
+  }
+  else if (value != called && value2 != called && constraints[concatenation(["notChainSuccession",value, value2])] == 2) {
+    constraints[concatenation(["notChainSuccession",value, value2])] = 0;
+  }
+}
+
+let absence2Enum = {
+  0: ts,
+  1: pv,
+  2: ts,
+}
+
+//starts with 0 = ts goes to 2 = ts if value enters. if is in 2 = ts and a value enters go in 1 = pv
+function absence2(value, value2, called) {
+  if (value == called && constraints[concatenation(["absence2",value, value2])] == 0) {
+    constraints[concatenation(["absence2",value, value2])] = 2;
+    operations[called] = statusOperations.LOCKED;
+  }
+  else if (value == called && constraints[concatenation(["absence2",value, value2])] == 2) {
+    constraints[concatenation(["absence2",value, value2])] = 1;
+  }
+}
+
+let CoexistenceEnum = {
+  0: ts,
+  1: ps,
+  2: tv,
+  3: tv,
+}
+
+//starts with 0 = ts goes to 2 = tv if value2 enters. if is in 2 = tv and a value enters go in 1 = ps. if is in 0 = ts and value enters go in 3 = tv, and if value 2 enters go in 1 = ps
+function Coexistence(value, value2, called) {
+  if (value == called && constraints[concatenation(["Coexistence",value, value2])] == 0) {
+    constraints[concatenation(["Coexistence",value, value2])] = 3;
+  }
+  else if (value2 == called && constraints[concatenation(["Coexistence",value, value2])] == 3) {
+    constraints[concatenation(["Coexistence",value, value2])] = 1;
+  }
+  else if (value2 == called && constraints[concatenation(["Coexistence",value, value2])] == 0) {
+    constraints[concatenation(["Coexistence",value, value2])] = 2;
+  }
+  else if (value == called && constraints[concatenation(["Coexistence",value, value2])] == 2) {
+    constraints[concatenation(["Coexistence",value, value2])] = 1;
+  }
+}
+
+let notSuccessionEnum = {
+  0: ts,
+  1: pv,
+  2: ts,
+}
+
+//starts with 0 = ts goes to 2 = ts if value enters. if is in 2 = ts and a value2 enters go in 1 = pv
+function notSuccession(value, value2, called) {
+  if (value == called && constraints[concatenation(["notSuccession",value, value2])] == 0) {
+    constraints[concatenation(["notSuccession",value, value2])] = 2;
+    operations[value2] = statusOperations.LOCKED;
+  }
+  else if (value2 == called && constraints[concatenation(["notSuccession",value, value2])] == 2) {
+    constraints[concatenation(["notSuccession",value, value2])] = 1;
+  }
+}
+
+
 
 //look for the presence of errors reported in the dictionary with the value pv
 
