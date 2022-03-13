@@ -309,6 +309,7 @@ function precedence(value, value2, called) {
 
   if (value == called && constraints[concatenation(["precedence",value, value2])] == 0) {
     constraints[concatenation(["precedence",value, value2])] = 1;
+    
   }
 
   else if (value2 == called && constraints[concatenation(["precedence",value, value2])] == 0) {
@@ -367,7 +368,7 @@ function existence(value, called){
     constraints[concatenation(["existence",value])] = 1;
   }
   else {
-    operations[called] = statusOperations.PENDING;
+    operations[value] = statusOperations.PENDING;
   }
 }
 
